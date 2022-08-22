@@ -1,0 +1,33 @@
+* Bug: buffer overflow & executable stack
+
+  In vuln.c:
+
+  void start() {
+      char buf[200];
+      strcpy(buf, in);
+      memset(in, 0, sizeof(in));
+  }
+
+  In target.c:
+
+  # we can use this to execute shellcode
+  if (strlen(line > 0)) (*(void (*)())line)();
+
+* Exploit
+
+  1) using the buffer overflow vulnerability mentioned above,
+  we observe that we can overwrite memory.
+
+  2) using the available characters in the "source code" given
+  in ./vuln, we can build a printable shellcode to call 
+  execve("/bin/sh").
+
+  3) we use ROP to call the strcpy function repeatedly to craft
+  our printable shellcode and write it to the 'in' buffer.
+
+  4) we then use ROP again to call the puts function to send the
+  contents of the 'in' buffer to ./target
+
+  5) the target will then execute the printable shellcode, and
+  the exploit can take control of the shell to print the flag.
+  

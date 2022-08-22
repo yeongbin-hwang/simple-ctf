@@ -1,0 +1,12 @@
+* Bug: a bof vulnerability
+
+  char guess[0x20];
+  read(0, guess, 0x500);
+
+* Exploit
+
+  1) overwrite return address, and use the return to csu
+  2) read(0, e.bss(), len("/bin/sh"))
+  3) write(1, write@got, 8)
+  4) read(0, open@got, 8)
+  5) open -> execve(/bin/sh, 0, 0)

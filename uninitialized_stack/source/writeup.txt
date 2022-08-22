@@ -1,0 +1,12 @@
+* Bug: uninitialized stack vulnerability
+
+  char name[100];
+	printf("enter your id : ");
+	scanf("%s", name);
+
+  int password;
+
+* Exploit
+
+  1) overwrite the password.
+  2) overwrite fflush@got to read_flag address
